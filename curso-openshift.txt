@@ -1,0 +1,46 @@
+
+Qué es OpenShift.
+Versión con una orientación empresarial para contenedores Docker.
+Curso orientado a desarrolladores.
+
+Requisitos
+- Conocimientos en lenguaje de programación Java
+- Conocimientos básicos en contenedores Docker
+- Conocimientos básicos en Git y GitHub
+
+OpenShift es un paso adelante acerca de la creación de infraestructuras que se harían normalmente con docker-compose. Es el competidor a Docker Enterprise, ya que es algo que es pensado ya no solo para tenerlo en nuestra estación de trabajo sino que también para labores de consultoría y de optimización de la infraestructura empresarial.
+
+Optimizar el uso de la infrestructura. El propio OpenShift se encarga de subir de acuerdo a unas métricas de carga de trabajo configuradas las instancias de los servicios para cubrir los picos de demanda. No hay necesidad de configurar a tope la memoria y en general los recursos utilizados por los servicios, sino que se configuran a un mínimo establecido, y adicionalmente se le configuran una reglas para escalar o eliminar nuevas instancias de los servicios. Por ejemplo si se tiene un servidor web WildFly, este se configura para que el mismo se escale en nuevas instancias cuando llega a un pico de trabajo, y además no es necesario configurarle 16GB de memoria RAM, sino que se configuran 8GB, y unas reglas para que se vanyan creando o se vayan destruyendo instancias según los picos o valles de demanda.
+
+Facilidades para los entornos de desarrollo
+- Facilidad para creación de la infraestructura, al OpenShift proporcionar plantillas con infraestructuras predefinidas, por ejemplo un WildFly con una base de datos interconectados.
+- Mayor productividad, para el desarrollador, ya que va a emplear mayor tiempo en el desarrollo en lugar de gastarlo en la implementación de nueva infraestructura de desarrollo.
+- Mayor flexibilidad al momento de hacer pruebas en infraestructura, ya que no va a tener que instalarse manualmente directamente en el equipo, sino que se va a crear y eliminar transparentemente a voluntad.
+
+OpenShift vs Docker
+
+Diferencias con Docker Enterprise
+- Mayor confiabilidad y experiencia y robustez de las soluciones Red Hat, con soluciones de recorrido como por ejemplo el sistema operativo Red Hat Enterprise Linux, JBOSS como servidor de aplicaciones; a diferencia de Docker Enterprise la cual en el ámbito empresarial es bastante nueva.
+- Por sí los solos contendores docker, con docker-compose, es bastante limitado para las empresas cuando la infraestructura es bastante grande, ya que es bastante contenedores y servicios que se deben configurar y administrar, lo cual con el docker por si solo es complicado para cubrir esta necesidad.
+- Por lo anterior, es necesario buscar otras herramientas que cubran las necesidades, como por ejemplo Docker Enterprise, o en este caso a OpenShift, ya que el mismo es la evolución de los contenedores, ya que tiene el motor de contenedores de docker, más la orquestación de contenedores proporcionada por Kubernetes, y adicionalmente un conjunto de herramientas y servicios proporcionados para cubrir las necesidades a nivel de entornos empresariales y de producción.
+
+Opciones para montar un servidor WildFly, que es una solución OpenSource, de la comunidad como alternativa a JBOSS. Configuración de entornos de desarrollo, pruebas y producción. Y trabajo con el lenguaje de programación Java.
+
+Opciones para instalar OpenShift
+Instalación de OpenShift, Red Hat tiene dos líneas de productos, uno con enfoque de pago, como tal Red Hat no cobra por el producto, sino que cobra por el soporte proporcionado para configurar el producto. Y otro gratuito que es el de la comunidad, en este no se tiene el soporte por lo cual se debe buscar el soporte en internet y en foros.
+- OpenShift Origin, https://www.okd.io/, ahora llamado ODK, que es la versión de la comunidad, el soporte no lo da el fabricante Red Hat, por lo tanto debe buscarse en internet y en foros.
+- MiniShift, https://www.okd.io/minishift/, https://github.com/minishift/minishift/releases, es un empaquetado de una máquina virtual de un clúster de OpenShift Origin o de OKD, para probar en local.
+- Versiones de pago de OpenShift comunes, con un con enfoque comercial, con control de calidad, https://www.openshift.com/. Esta tiene dos opciones para compra o testeo, de las cuales se puede elegir configurar el OpenShift directamente en una nube administrada por la propia RedHat (OpenShift Online), o también se puede instalar OpenShift en una infraestructura empresarial para configurar una nube local.
+- Equivalente de Red Hat al MiniShift, el cual es una versión empresarial de las herramientas de desarrollador, https://developers.redhat.com/products/cdk/overview/, es un MiniShift con una serie de añadidos. Es necesario tener una cuenta de desarrollador o de parthner, para descargar estas herramientas.
+
+El curso se enfoca a la versión 3, las versiones previas de OpenShift se basan en tecnologías anteriores la cuales no son en contenedores.
+
+
+Pasos previos para la instalación de OpenShift
+- Instalar VirtualBox
+- Descargar el command line tool de la página de releases, https://github.com/minishift/minishift/releases, para la versión del sistema operativo que tenga instalada.
+- Seguir las instrucciones de la quía rápida, https://docs.okd.io/latest/minishift/getting-started/quickstart.html
+- Descomprimir la herramienta, y ejecutar el siguiente comando:
+    minishift start --vm-driver=virtualbox
+
+
