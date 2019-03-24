@@ -36,11 +36,330 @@ Instalación de OpenShift, Red Hat tiene dos líneas de productos, uno con enfoque
 El curso se enfoca a la versión 3, las versiones previas de OpenShift se basan en tecnologías anteriores la cuales no son en contenedores.
 
 
-Pasos previos para la instalación de OpenShift
+Pasos previos para la instalación de OpenShift (minishift)
 - Instalar VirtualBox
 - Descargar el command line tool de la página de releases, https://github.com/minishift/minishift/releases, para la versión del sistema operativo que tenga instalada.
 - Seguir las instrucciones de la quía rápida, https://docs.okd.io/latest/minishift/getting-started/quickstart.html
 - Descomprimir la herramienta, y ejecutar el siguiente comando:
     minishift start --vm-driver=virtualbox
+- Por problemas de funcionamiento en el minishift, se deben ejecutar los siguientes comandos:
+
+    Para virtualbox:
+
+    minishift config set vm-driver virtualbox
+    minishift config set iso-url file://d:/minishift-centos7.iso
+    minishift config set static-ip true
+    minishift config set network-ipaddress 192.168.0.47
+    minishift config set network-netmask 255.255.255.0
+    minishift config set network-gateway 192.168.0.1
+    minishift config set network-nameserver 8.8.8.8
+    minishift config set static-ip true
+
+    Para Hyper-V (Windows):
+
+    minishift config set vm-driver hyperv
+    minishift config set iso-url file://d:/minishift-centos7.iso
+    minishift config set skip-check-hyperv-driver true
+    minishift config set hyperv-virtual-switch minishift
+    minishift config set network-ipaddress 192.168.0.47
+    minishift config set network-netmask 255.255.255.0
+    minishift config set network-gateway 192.168.0.1
+    minishift config set network-nameserver 8.8.8.8
+    minishift start
+
+    Con lo anterior, se crea una carpeta minishift, con la caché de las imágenes iso y la ubicación de las máquinas virtuales en el directorio .minishift ubicado en la carpeta del usuario, también inicializa la máquina virtual de CentOS, y a continuación instala docker e instala e inicializa un clúster OpenShift.
+
+- Cargar la consola de administración, indicada cuando la inicialización del minishift se haya completado correctamente.
+
+Desinstalación de minishift
+- Se utilizan los siguientes comandos
+    minishift stop
+    minishift delete
+- Se elimina la carpeta .minishift del profile del usuario
+- Se elimina el binario de minishift descargado
+
+Parametrización del minishift
+- Con el comando minishift config, se obtienen todas las configuraciones disponibles para el minishift.
+
+C:\Users\drojas>minishift config
+Modifies Minishift configuration properties. Some of the configuration properties are equivalent
+to the options that you set when you run the 'minishift start' command.
+
+//////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+
+Configurable properties (enter as SUBCOMMAND):
+
+ * iso-url
+ * cpus
+ * memory
+ * disk-size
+ * vm-driver
+ * openshift-version
+ * host-only-cidr
+ * docker-env
+ * docker-opt
+ * insecure-registry
+ * registry-mirror
+ * addon-env
+ * remote-ipaddress
+ * remote-ssh-user
+ * remote-ssh-key
+ * timezone
+ * skip-registry-check
+ * public-hostname
+ * routing-suffix
+ * server-loglevel
+ * write-config
+ * extra-clusterup-flags
+ * no-proxy
+ * http-proxy
+ * https-proxy
+ * local-proxy
+ * local-proxy-reencrypt
+ * local-proxy-upstream
+ * username
+ * password
+ * skip-registration
+ * log_dir
+ * show-libmachine-logs
+ * hostfolders-mountpath
+ * hostfolders-automount
+ * hostfolders-sftp-port
+ * services-proxy-port
+ * no-provision
+ * image-caching
+ * skip-check-deprecation
+ * warn-check-deprecation
+ * skip-check-kvm-driver
+ * warn-check-kvm-driver
+ * skip-check-xhyve-driver
+ * warn-check-xhyve-driver
+ * skip-check-hyperv-driver
+ * warn-check-hyperv-driver
+ * skip-check-iso-url
+ * warn-check-iso-url
+ * skip-check-vm-driver
+ * warn-check-vm-driver
+ * skip-check-vbox-installed
+ * warn-check-vbox-installed
+ * skip-check-openshift-version
+ * warn-check-openshift-version
+ * skip-check-openshift-release
+ * warn-check-openshift-release
+ * skip-startup-checks
+ * skip-check-clusterup-flags
+ * warn-check-clusterup-flags
+ * skip-check-instance-ip
+ * warn-check-instance-ip
+ * skip-check-network-host
+ * warn-check-network-host
+ * skip-check-network-ping
+ * warn-check-network-ping
+ * skip-check-network-http
+ * warn-check-network-http
+ * skip-check-storage-mount
+ * warn-check-storage-mount
+ * skip-check-storage-usage
+ * warn-check-storage-usage
+ * skip-check-nameservers
+ * warn-check-nameservers
+ * check-network-http-host
+ * check-network-ping-host
+ * network-device
+ * network-ipaddress
+ * network-netmask
+ * network-gateway
+ * network-nameserver
+ * network-dnsmasq-containerized
+ * network-dnsmasq-container
+ * hyperv-virtual-switch
+ * save-start-flags
+ * auto-start-tray
+ * static-ip
+
+Usage:
+  minishift config SUBCOMMAND [flags]
+  minishift config [command]
+
+Available Commands:
+  get         Gets the value of a configuration property from the Minishift configuration file.
+  set         Sets the value of a configuration property in the Minishift configuration file.
+  unset       Clears the value of a configuration property in the Minishift configuration file.
+  view        Display the properties and values of the Minishift configuration file.
+
+Flags:
+  -h, --help   help for config
+
+Global Flags:
+      --alsologtostderr                  log to standard error as well as files
+      --httptest.serve string            if non-empty, httptest.NewServer serves on this address and blocks
+      --log_backtrace_at traceLocation   when logging hits line file:N, emit a stack trace (default :0)
+      --log_dir string                   If non-empty, write log files in this directory
+      --logtostderr                      log to standard error instead of files
+      --profile string                   Profile name (default "minishift")
+      --show-libmachine-logs             Show logs from libmachine.
+      --stderrthreshold severity         logs at or above this threshold go to stderr (default 2)
+      --test.bench regexp                run only benchmarks matching regexp
+      --test.benchmem                    print memory allocations for benchmarks
+      --test.benchtime d                 run each benchmark for duration d (default 1s)
+      --test.blockprofile file           write a goroutine blocking profile to file
+      --test.blockprofilerate rate       set blocking profile rate (see runtime.SetBlockProfileRate) (default 1)
+      --test.count n                     run tests and benchmarks n times (default 1)
+      --test.coverprofile file           write a coverage profile to file
+      --test.cpu list                    comma-separated list of cpu counts to run each test with
+      --test.cpuprofile file             write a cpu profile to file
+      --test.failfast                    do not start new tests after the first test failure
+      --test.list regexp                 list tests, examples, and benchmarks matching regexp then exit
+      --test.memprofile file             write an allocation profile to file
+      --test.memprofilerate rate         set memory allocation profiling rate (see runtime.MemProfileRate)
+      --test.mutexprofile string         write a mutex contention profile to the named file after execution
+      --test.mutexprofilefraction int    if >= 0, calls runtime.SetMutexProfileFraction() (default 1)
+      --test.outputdir dir               write profiles to dir
+      --test.parallel n                  run at most n tests in parallel (default 4)
+      --test.run regexp                  run only tests and examples matching regexp
+      --test.short                       run smaller test suite to save time
+      --test.testlogfile file            write test action log to file (for use only by cmd/go)
+      --test.timeout d                   panic test binary after duration d (default 0, timeout disabled) (default 0s)
+      --test.trace file                  write an execution trace to file
+      --test.v                           verbose: print additional output
+  -v, --v Level                          log level for V logs. Level varies from 1 to 5 (default 1).
+      --vmodule moduleSpec               comma-separated list of pattern=N settings for file-filtered logging
+
+Use "minishift config [command] --help" for more information about a command.
+
+//////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+
+- Con el comando
+    minishift status
+  Se comprueba si existe una instancia de minishift en ejecución
+
+- Con el comando
+    minishift start
+  Se inicializa la máquina virtual con el minishift incorporado
+
+- Para setear un comando, se utiliza la opción set, por ejemplo:
+    minishift config set vm-driver virtualbox
+  Se utiliza para setear el driver por defecto a virtualbox
+
+- Para quitar una configuración, se utiliza la opción unset, por ejemplo
+    minishift config unset vm-driver virtualbox
+  Se utiliza para quitar el driver por defecto de virtualbox
+
+Diferencias entre minishift y OpenShift
+
+- Una instalación de OpenShift, es bastante laboriosa, ya que debe configurarse para una infraestructura corporativa bastante grande, para ambiente productivo
+
+- Minishift, es una versión de OKD, y lo configura dentro de una máquina virtual, para utilizar de manera local.
+
+- Si se requiere acceso a la opciones de openshift, por si solo con el minishift no es posible, por lo tanto se requiere de un cliente OpenShift en línea de comando para conectarse a la instancia de OpenShift.
+
+- Con el comando
+    minishift oc-env
+  Se obtiene la instrucción para setear por consola en la variable de entorno PATH del sistema, la ruta del binario de oc.
+
+- Con el comando
+    oc login
+  Se loguea desde la consola de comando, para hacer las labores administrativas que se harían normalmente también a través de la interfaz web
+  
+Las ventajas de OpenShift, es que hace trivial algo tan importante como el aprovisionamiento de infraestructura, cuando se trabajaba en infraestructura tradicional, se dimensionaba todo de acuerdo a los topes máximos de demanda. En OpenShift, con la facilidad y bajo coste de aprovisionar un nuevo servidor, es posible dimensionar a un tope mínimo, y que escuche los parámetros, configurados en una plantilla, como por ejemplo los picos de consumo de CPU y memoria, y que se vaya escalando de acuerdo a la necesidad de atender mayores peticiones al servidor.
+
+Arquitecturas previas
+- Cuando se tiene varios WildFly, que tienen siempre la prioridad de atender solicitudes entrantes, cuando hay indisponibilidad de uno de los sevidores, debe existir un balanceador o un clúster que tenga en consideración detectar indisponibilidad, picos de demanda o que la instancia directamente no responde, para redirigir el tráfico entrante a otro servidor que esté disponible.
+
+
+Qué es un Pod?
+"OpenShift aprovecha el concepto de Kubernetes de un Pod, que es uno o más contenedores desplegados juntos en un host, y la unidad de cómputo más pequeña que se puede definir, implementar y admninistrar"
+
+- Los pilares de OpenShift, que son los contenedores, en este caso aprovisionados por el motor de containers Docker, y por Kubernetes que es el orquestador de contenedores.
+
+- Un Pod es un contenedor, que se le aplican todas las características, restricciones y buenas prácticas que se le deben aplicar a un contenedor, una de las carecterísticas principales de un contenedor es que es efímero, ya que se crean y se destruyen. Kubeneter crea y destruyen contenedores, algo que se puede diferenciar a una máquina virtual tradicional.
+
+- Agrupamiendo de unidades mínimas y orquestamiento.
+
+Creación de un Pod
+- Imágenes, pueden seleccionarse las predefinidas, o pueden importarse a partir del docker hub, como también pueden cargarse plantillas yaml.
+
+- Definición para rutas de tráfico externo, son para definir la comunicación del puerto ofrecido por el Pod, para que se pueda comunicar con el exterior. Por defecto no está definida ninguna ruta, por lo tanto por defecto no está expuesto el servicio del Pod al exterior.
+
+- Para realizar el escalado manual del Pod se puede hacer de manera gráfica sobre la flecha arriba del Pod en Overview.
+
+- Para realizar el redesplegado de un Pod, si por ejemplo, se tiene que un Pod que fue generado en una versión anterior de la imagen, y se quiere realizar un redespliegue a la version latest de la imagen, se puede dar click en Deploy, opción sobre la aplicación, y a partir de esto, descarga la imagen y genera el o los Pods.
+
+- Pods Efímeros: Todos los Pods son efímeros, por lo tanto, lo que no se edita es la configuración ni el contenido de la máquina, sino que en base a una plantilla, se genera una nueva versión del Pod, y se destruye la versión anterior del contenedor o Pod, por lo tanto se debe tener cuidado con ello.
+
+- Acceso a la terminal del Pod, y a los logs.
+- Los Pods tiene visibilidad entre si, pero por defecto no hay comunicación con el exterior.
+
+Qué es un Servicio
+"Un servicio de Kubernetes sirve comobalanceador de carga interno. Identifica un conjunto de Pods replicado para realizar la función de proxy de las conexiones que recibe"
+
+Qué es una ruta
+"Una ruta es una forma de exponer un servicio dándole un nombre de host alacanzable desde afuera"
+
+Rutas Canary o AB
+- Crear un nuevo proyecto
+- Crear un nuevo servidor WildFly, el cual tendrá enlace a los fuentes del siguiente proyecto de GitHub:
+    https://github.com/inigoserrano/cursoOpenShiftAppSin.git
+- Crear una aplicación con la rama master y otra aplicación con la rama dev
+- Se edita la ruta de la rama master, sobre la cual se va a realizar un particionamiento de tráfico, con la siguiente opción:
+     Split traffic across multiple services 
+- Se edita para que redirija el tráfico 50/50
+- Se prueba el acceso desde distintos navegadores a la ruta
+    http://appdev-canary.192.168.99.101.nip.io/Aplicacion/aplicacion
+     
+Qué es s2i
+- No es normal arrancar un servidor de aplicaciones en blanco
+- Es una herramienta y un flujo de trabajo que contruye imágenes Docker desde código fuente. Crea imágenes listas inyectando el código fuente compilándolo directamente dentro de container Docker.
+- https://github.com/openshift/source-to-image
+- Viene integrado en OpenShift
+- No viene optimizada para los entornos empresariales, ya que puede haber casos en los que no pase directamente del fuente a la imagen, sino que pueden existir unos flujos de trabajo en los cuales se pase el código por un analizador de código, etc.
+- Es útil si se requiere hacer pruebas en desarrollo rápidas
+- Tiene soporte para varios lenguajes.
+- Se puede redesplegar el código una vez se hayan hecho cambios en el repositorio del código fuente
+
+Redespliegue automático
+- Debe haber comunicación entre el github y el OpenShift, por lo tanto esta prueba sdebe hacerse directamente en el OpenShift Online, la versión gratuita de OpenShift que ofrece RedHat
+- Se debe ir al build requerido, y se copia la URL del GitHub Webhook
+- Esta URL se configura en el repositorio, con esto, al momento de realizar un cambio en el repositorio, se ejecuta la URL que le dice al OpenShift, que realice la construcción del nuevo build
+
+
+Variables de entorno y Secrets
+- Son para configurar información sensible que no debe quedar para todo el mundo
+- Se pueden mapear a variables de entorno del Pod, sin embargo se puede restringir el acceso al log y a la consola del Pod, de igual manera a como lo haría el personal de tecnología en una empresa con la infraestrucutra tradicional.
+
+ConfigMaps
+- Son archivos de configuración, emulados como archivos físicos que se pueden inyectar en un Pod, para que sean un archivo de propiedades para el usuario
+
+Builds
+- Son instrucciones que le indican al OpenShift como realizar la construcción de las imágenes Docker en la cuales posteriormente se basarán los Pods, definiendo características como por ejemplo el repositorio GitHub en el que se va a basar para construir las imágenes con los fuentes de una aplicación o con las instrucciones para construir imágenes como por ejemplo un dockerfile.
+
+Deployments
+- Son las instrucciones utilizadas sobre como realizar la construcción del Pod, variables de entorno utilizadas, configuraciones como por ejemplo config maps, secrets y variables de entorno.
+
+Volúmenes
+- Debido a la naturaleza de como está definida el ciclo de vida de los Pods, la información al igual que los Pods que la contienen, es efímera, por lo tanto se hace necesario la construcción de volúmenes que se puedan acoplar en la estructura de la aplicación, para que la información que decidamos conservar independientemente del ciclo de vida del Pod. Esto viene preconfigurado en las plantillas de OpenShift, aunque se hace necesario conocer por las razones anteriomente expuestas, e incluso en los docker-compose.
+
+Plantillas
+Las plantillas de OpenShift son utilizadas para cargar nuevas imágenes, con asistentes personalizados.
+https://github.com/OpenShiftDemos
+
+Crear un artefactory en OpenShift:
+https://hub.docker.com/r/sonatype/nexus/
+https://github.com/sonatype/docker-nexus3
+
+Crear un servidor Git local (Gogs)
+https://hub.docker.com/r/gogs/gogs/
+https://github.com/OpenShiftDemos/gogs-openshift-docker
+
+Con del Dockerfile, se versiona en el gogs, y se construye a partir de ese dockerfile, la nueva aplicación.
+
+Para crear una nueva aplicación, se deben ejecutar los siguientes comandos:
+oc login
+oc project proyecto
+oc new-app http://gogs-repositorios.192.168.99.101.nip.io/danrojas7/cursoOpenShiftWildFlyDCK.git
 
 
